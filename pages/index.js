@@ -42,7 +42,9 @@ export async function getStaticProps() {
   // use to cache data and dont need to reload everytime pages refresh
   // always return an object
   // fetch data from api
-  const client = await MongoClient.connect(mongoUrl);
+  const client = await MongoClient.connect(mongoUrl, {
+    useUnifiedTopology: true,
+  });
   const db = client.db();
 
   const meetupsCollection = db.collection('meetups');
