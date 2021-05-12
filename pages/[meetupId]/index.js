@@ -1,4 +1,8 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
+import {
+  getMeetupsById,
+  getAllMeetupsIds,
+} from './mongo-context/mongo-context';
 import Head from 'next/head';
 import { Fragment } from 'react';
 import MeetupDetail from '../../components/meetups/MeetupDetail';
@@ -15,20 +19,8 @@ export default function MeetupDetails(props) {
   );
 }
 
-const user = 'seba-mongo';
-const pass = 'TFP83tHAbltQDC08';
-const dbName = 'meetups';
-const mongoUrl = `mongodb+srv://${user}:${pass}@cluster0.ntm1w.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-
 export async function getStaticPaths() {
-  const client = await MongoClient.connect(mongoUrl);
-  const db = client.db();
-
-  const meetupsCollection = db.collection('meetups');
-
-  const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray();
-
-  client.close();
+  const meetups = await getAllMeetupsIds();
 
   return {
     fallback: 'blocking',
@@ -43,16 +35,7 @@ export async function getStaticProps(context) {
 
   const meetupId = context.params.meetupId;
 
-  const client = await MongoClient.connect(mongoUrl);
-  const db = client.db();
-
-  const meetupsCollection = db.collection('meetups');
-
-  const selectedMeetup = await meetupsCollection.findOne({
-    _id: ObjectId(meetupId),
-  });
-
-  client.close();
+  const selectedMeetup = await getMeetupsById(meetupId);
 
   return {
     props: {

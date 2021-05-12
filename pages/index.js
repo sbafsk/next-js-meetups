@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import { MongoClient } from 'mongodb';
+
+import { getAllMeetups } from './mongo-context/mongo-context';
 
 import MeetupList from '../components/meetups/MeetupList';
 import { Fragment } from 'react';
@@ -30,11 +31,6 @@ function HomePage(props) {
 //   };
 // }
 
-const user = 'seba-mongo';
-const pass = 'TFP83tHAbltQDC08';
-const dbName = 'meetups';
-const mongoUrl = `mongodb+srv://${user}:${pass}@cluster0.ntm1w.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-
 // nextjs function, gets called first
 // backend code, executes during building process
 
@@ -42,16 +38,8 @@ export async function getStaticProps() {
   // use to cache data and dont need to reload everytime pages refresh
   // always return an object
   // fetch data from api
-  const client = await MongoClient.connect(mongoUrl, {
-    useUnifiedTopology: true,
-  });
-  const db = client.db();
 
-  const meetupsCollection = db.collection('meetups');
-
-  const meetups = await meetupsCollection.find().toArray();
-
-  client.close();
+  const meetups = await getAllMeetups();
 
   return {
     props: {
