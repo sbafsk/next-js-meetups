@@ -1,7 +1,7 @@
 import {
   getMeetupsById,
   getAllMeetupsIds,
-} from './mongo-context/mongo-context';
+} from '../mongo-context/mongo-context';
 import Head from 'next/head';
 import { Fragment } from 'react';
 import MeetupDetail from '../../components/meetups/MeetupDetail';
